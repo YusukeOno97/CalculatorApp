@@ -10,17 +10,19 @@ import UIKit
 
 class ViewController: UIViewController {
     // 画面上の数字
-    var numberOnScreen:Double = 0
+    var numberOnScreen: Double = 0
     // 前回表示されていた数字
-    var previousNumber:Double = 0
+    var previousNumber: Double = 0
     // 計算してもいい？の判断値
     var performingMath = false
     // 足し算、引き算、割り算、掛け算
-    var operation = 0;
+    var operation = 0
+    // 数値が入力されているか
+    var inValue = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        label.text = ""
     }
     // 計算結果を表示するラベルの紐付け
     @IBOutlet weak var label: UILabel!
@@ -29,71 +31,82 @@ class ViewController: UIViewController {
         
         if performingMath == true {
             // numberOnScreen の値が上書きされる
-            label.text = String(sender.tag-1)
+            label.text = String(sender.tag - 1)
             numberOnScreen = Double(label.text!)!
             performingMath = false
-        }
-        else{
+        } else {
             // String(sender.tag-1) 数字が代入
-            label.text = label.text! + String(sender.tag-1)
+            label.text = label.text! + String(sender.tag - 1)
             // 数字が表示
             numberOnScreen = Double(label.text!)!
         }
+        // 数値が入力された
+        inValue = true
     }
     @IBAction func buttons(_ sender: UIButton) {
         // 数字が表示されていた場合の処理
         if label.text != "" && sender.tag != 11 && sender.tag != 16{
-            previousNumber = Double(label.text!)!
-            // 割り算
-            if sender.tag == 12{
-                label.text = "÷";
+
+            if inValue {
+                previousNumber = Double(label.text!)!
             }
-            //  掛け算
-            else if sender.tag == 13{
-                label.text = "×";
+            if sender.tag == 12 {  // 割り算
+                label.text = "÷"
+            } else if sender.tag == 13 {  //  掛け算
+                label.text = "×"
+            } else if sender.tag == 14 { // 足し算
+                label.text = "+"
+            }else if sender.tag == 15 { // 引き算
+                label.text = "-"
             }
-            // 引き算
-            else if sender.tag == 14{
-                label.text = "-";
-            }
-            // 足し算
-            else if sender.tag == 15{
-                label.text = "+";
-            }
-            operation = sender.tag
-            performingMath = true;
-        }
-        // イコールボタンが押された時の処理
-        else if sender.tag == 16
-        {
+            operation = sender.tag // 四則演算のタグ番号代入
+            performingMath = true // 計算可能
+            inValue = false // 数値ではない
+        } else if sender.tag == 16 {  // イコールボタンが押された時の処理
+
             if operation == 12{
-                label.text = String(previousNumber / numberOnScreen)
+                if  numberOnScreen == 0 {
+                    label.text = "エラー"
+                } else {
+                    let num = String(previousNumber / numberOnScreen).components(separatedBy: ".")
+                    if num[1] == "0" {
+                        // 少数でない時
+                        label.text = num[0]
+                    } else {
+                        label.text = String(previousNumber / numberOnScreen)
+                    }
+                }
+
+            } else if operation == 13 {
+                let num = String(previousNumber * numberOnScreen).components(separatedBy: ".")
+                if num[1] == "0" {
+                     // 少数でない時
+                    label.text = num[0]
+                } else {
+                    label.text = String(previousNumber * numberOnScreen)
+                }
+            } else if operation == 14{
+                let num = String(previousNumber - numberOnScreen).components(separatedBy: ".")
+                if num[1] == "0" {
+                    // 少数でない時
+                    label.text = num[0]
+                } else {
+                    label.text = String(previousNumber + numberOnScreen)
+                }
+            } else if operation == 15{
+                let num = String(previousNumber - numberOnScreen).components(separatedBy: ".")
+                if num[1] == "0" {
+                     // 少数でない時
+                    label.text = num[0]
+                } else {
+                    label.text = String(previousNumber - numberOnScreen)
+                }
             }
-            else if operation == 13{
-                label.text = String(previousNumber * numberOnScreen)
-            }
-            else if operation == 14{
-                label.text = String(previousNumber - numberOnScreen)
-            }
-            else if operation == 15{
-                label.text = String(previousNumber + numberOnScreen)
-            }
-            
-            // 整数の時に小数点第一を消す処理
-            let decimals: [String] = String(label.text!).components(separatedBy: ".")
-            if decimals[1] == "0" {
-                label.text = String((label.text!.description as NSString).integerValue)
-            } else {
-                label.text = String(label.text!)
-            }
-        
-        }
-        // クリアされたとき
-        else if sender.tag == 11{
+        } else if sender.tag == 11 { // Cが押された時
             label.text = ""
-            previousNumber = 0;
-            numberOnScreen = 0;
-            operation = 0;
+            previousNumber = 0
+            numberOnScreen = 0
+            operation = 0
         }
     }
     
