@@ -50,26 +50,31 @@ class ViewController: UIViewController {
             if inValue {
                 previousNumber = Double(label.text!)!
             }
-            if sender.tag == 12 {  // 割り算
-                label.text = "÷"
-            } else if sender.tag == 13 {  //  掛け算
-                label.text = "×"
-            } else if sender.tag == 14 { // 足し算
-                label.text = "+"
-            }else if sender.tag == 15 { // 引き算
-                label.text = "-"
+
+            switch sender.tag {
+
+            case 12:
+                 label.text = "÷"  // 割り算
+            case 13:
+                 label.text = "×" //  掛け算
+            case 14:
+                 label.text = "+"  // 足し算
+            case 15:
+                 label.text = "-" // 引き算
+            default:
+                break
             }
-            operation = sender.tag // 四則演算のタグ番号代入
+     operation = sender.tag // 四則演算のタグ番号代入
             performingMath = true // 計算可能
             inValue = false // 数値ではない
         } else if sender.tag == 16 {  // イコールボタンが押された時の処理
 
-            if operation == 12{
+            if operation == 12 {
                 if  numberOnScreen == 0 {
                     label.text = "エラー"
                 } else {
                     let num = String(previousNumber / numberOnScreen).components(separatedBy: ".")
-                    if num[1] == "0" {
+                    if num.last == "0" {
                         // 少数でない時
                         label.text = num[0]
                     } else {
@@ -79,13 +84,13 @@ class ViewController: UIViewController {
 
             } else if operation == 13 {
                 let num = String(previousNumber * numberOnScreen).components(separatedBy: ".")
-                if num[1] == "0" {
+                if num.last == "0" {
                      // 少数でない時
                     label.text = num[0]
                 } else {
                     label.text = String(previousNumber * numberOnScreen)
                 }
-            } else if operation == 14{
+            } else if operation == 14 {
                 let num = String(previousNumber - numberOnScreen).components(separatedBy: ".")
                 if num[1] == "0" {
                     // 少数でない時
@@ -93,7 +98,7 @@ class ViewController: UIViewController {
                 } else {
                     label.text = String(previousNumber + numberOnScreen)
                 }
-            } else if operation == 15{
+            } else if operation == 15 {
                 let num = String(previousNumber - numberOnScreen).components(separatedBy: ".")
                 if num[1] == "0" {
                      // 少数でない時
@@ -102,6 +107,7 @@ class ViewController: UIViewController {
                     label.text = String(previousNumber - numberOnScreen)
                 }
             }
+
         } else if sender.tag == 11 { // Cが押された時
             label.text = ""
             previousNumber = 0
@@ -109,31 +115,6 @@ class ViewController: UIViewController {
             operation = 0
         }
     }
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
 }
 
 
